@@ -13,7 +13,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
+import { toast } from "sonner";
 import { useInventory } from "@/components/providers/inventory-provider";
+import { findDuplicateVehicle } from "@/lib/inventory-checks";
 import { CONDITIONS, VEHICLE_STATUSES } from "@/lib/constants";
 import type { Vehicle } from "@/lib/types";
 import { vehicleFormSchema, type VehicleFormValues } from "@/lib/validators";
@@ -41,7 +43,7 @@ const defaultValues: VehicleFormValues = {
 
 export function VehicleForm({ vehicle, mode }: VehicleFormProps) {
   const router = useRouter();
-  const { dispatch } = useInventory();
+  const { state, dispatch } = useInventory();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState<VehicleFormValues>(
     vehicle
@@ -88,6 +90,17 @@ export function VehicleForm({ vehicle, mode }: VehicleFormProps) {
       return;
     }
 
+    const duplicate = findDuplicateVehicle(
+      state,
+      result.data.stockNumber,
+      result.data.vin,
+      vehicle?.id
+    );
+    if (duplicate) {
+      toast.error(duplicate);
+      return;
+    }
+
     const data = {
       ...result.data,
       acquiredAt: new Date(result.data.acquiredAt).toISOString(),
@@ -95,9 +108,11 @@ export function VehicleForm({ vehicle, mode }: VehicleFormProps) {
 
     if (mode === "create") {
       dispatch({ type: "ADD_VEHICLE", payload: data });
+      toast.success("Vehicle added to inventory");
       router.push("/vehicles");
     } else if (vehicle) {
       dispatch({ type: "UPDATE_VEHICLE", payload: { id: vehicle.id, data } });
+      toast.success("Vehicle updated");
       router.push(`/vehicles/${vehicle.id}`);
     }
   }

@@ -1,16 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { DollarSign, Receipt } from "lucide-react";
+import { DollarSign, Download, Receipt, Search } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { SalesTable } from "@/components/inventory/sales-table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
@@ -20,31 +15,50 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useInventory } from "@/components/providers/inventory-provider";
-import { PAYMENT_METHODS } from "@/lib/constants";
-import { formatCurrency, formatDateTime } from "@/lib/utils";
-import { SaleTypeBadge } from "@/components/inventory/status-badge";
-import { cn } from "@/lib/utils";
+import {
+  exportSalesToCsv,
+  filterSales,
+  type SalesDateFilter,
+} from "@/lib/sales-utils";
+import { formatCurrency } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function SalesPage() {
   const { state } = useInventory();
   const [typeFilter, setTypeFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState<SalesDateFilter>("all");
+  const [search, setSearch] = useState("");
 
   const sortedSales = useMemo(() => {
     const sales = [...state.sales].sort(
       (a, b) => new Date(b.soldAt).getTime() - new Date(a.soldAt).getTime()
     );
-    if (typeFilter === "all") return sales;
-    return sales.filter((s) => s.type === typeFilter);
-  }, [state.sales, typeFilter]);
+    return filterSales(sales, { typeFilter, dateFilter, search });
+  }, [state.sales, typeFilter, dateFilter, search]);
 
   const totalFiltered = sortedSales.reduce((sum, s) => sum + s.amount, 0);
   const totalAll = state.sales.reduce((sum, s) => sum + s.amount, 0);
+
+  function handleExport() {
+    if (sortedSales.length === 0) {
+      toast.error("No sales to export for the current filters");
+      return;
+    }
+    exportSalesToCsv(sortedSales);
+    toast.success(`Exported ${sortedSales.length} sales to CSV`);
+  }
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Sales History"
-        description={`${state.sales.length} transactions recorded`}
+        description={`${state.sales.length} transactions — click a row for details`}
+        actions={
+          <Button variant="outline" onClick={handleExport}>
+            <Download className="size-4" />
+            Export CSV
+          </Button>
+        }
       />
       <div className="grid gap-4 sm:grid-cols-2">
         <Card className="border-primary/20 bg-gradient-to-br from-primary/10 to-card shadow-lg">
@@ -79,12 +93,21 @@ export default function SalesPage() {
         </Card>
       </div>
       <Card className="border-border/50 bg-card/80 shadow-lg">
-        <CardContent className="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <CardContent className="flex flex-col gap-4 pt-6 lg:flex-row lg:flex-wrap lg:items-center">
+          <div className="relative min-w-[200px] flex-1">
+            <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-primary/60" />
+            <Input
+              placeholder="Search buyer, item, phone..."
+              className="border-border/50 bg-background/50 pl-9"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
           <Select
             value={typeFilter}
             onValueChange={(v) => setTypeFilter(v ?? "all")}
           >
-            <SelectTrigger className="w-full border-border/50 bg-background/50 sm:w-44">
+            <SelectTrigger className="w-full border-border/50 bg-background/50 sm:w-40">
               <SelectValue placeholder="All types" />
             </SelectTrigger>
             <SelectContent>
@@ -93,62 +116,25 @@ export default function SalesPage() {
               <SelectItem value="part">Parts only</SelectItem>
             </SelectContent>
           </Select>
+          <Select
+            value={dateFilter}
+            onValueChange={(v) => setDateFilter((v ?? "all") as SalesDateFilter)}
+          >
+            <SelectTrigger className="w-full border-border/50 bg-background/50 sm:w-44">
+              <SelectValue placeholder="All time" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All time</SelectItem>
+              <SelectItem value="7d">Last 7 days</SelectItem>
+              <SelectItem value="30d">Last 30 days</SelectItem>
+              <SelectItem value="month">This month</SelectItem>
+            </SelectContent>
+          </Select>
         </CardContent>
       </Card>
       <Card className="border-border/50 bg-card/80 shadow-lg">
         <CardContent className="pt-6">
-          {sortedSales.length === 0 ? (
-            <p className="py-12 text-center text-sm text-muted-foreground">
-              No sales recorded yet.
-            </p>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow className="border-border/50 hover:bg-transparent">
-                  <TableHead>Date</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Item</TableHead>
-                  <TableHead>Buyer</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>Payment</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sortedSales.map((sale, i) => (
-                  <TableRow
-                    key={sale.id}
-                    className={cn(
-                      "border-border/30",
-                      i % 2 === 0 ? "bg-muted/15" : ""
-                    )}
-                  >
-                    <TableCell className="text-muted-foreground">
-                      {formatDateTime(sale.soldAt)}
-                    </TableCell>
-                    <TableCell>
-                      <SaleTypeBadge type={sale.type} />
-                    </TableCell>
-                    <TableCell className="max-w-[220px] truncate font-medium">
-                      {sale.itemLabel}
-                    </TableCell>
-                    <TableCell>{sale.buyerName}</TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {sale.buyerPhone || "—"}
-                    </TableCell>
-                    <TableCell>
-                      {PAYMENT_METHODS.find(
-                        (m) => m.value === sale.paymentMethod
-                      )?.label ?? sale.paymentMethod}
-                    </TableCell>
-                    <TableCell className="text-right font-semibold text-primary">
-                      {formatCurrency(sale.amount)}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
+          <SalesTable sales={sortedSales} />
         </CardContent>
       </Card>
     </div>

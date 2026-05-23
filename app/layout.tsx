@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Geist_Mono, Oswald } from "next/font/google";
 import { InventoryProvider } from "@/components/providers/inventory-provider";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -35,7 +36,10 @@ export default function RootLayout({
       className={`dark ${dmSans.variable} ${oswald.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
-        <InventoryProvider>{children}</InventoryProvider>
+        <InventoryProvider>
+          {children}
+          <Toaster position="top-right" richColors closeButton />
+        </InventoryProvider>
       </body>
     </html>
   );

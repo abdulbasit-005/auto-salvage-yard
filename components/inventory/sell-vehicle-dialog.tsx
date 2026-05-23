@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 import { useInventory } from "@/components/providers/inventory-provider";
 import { PAYMENT_METHODS } from "@/lib/constants";
 import type { Vehicle } from "@/lib/types";
@@ -66,6 +67,7 @@ export function SellVehicleDialog({ vehicle, trigger }: SellVehicleDialogProps) 
         includeRemainingParts: form.includeRemainingParts,
       },
     });
+    toast.success("Vehicle sale recorded");
     setOpen(false);
   }
 

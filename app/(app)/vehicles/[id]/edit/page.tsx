@@ -2,7 +2,9 @@
 
 import { useParams } from "next/navigation";
 import { PageHeader } from "@/components/layout/page-header";
+import { DeleteVehicleButton } from "@/components/inventory/delete-vehicle-button";
 import { VehicleForm } from "@/components/inventory/vehicle-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ButtonLink } from "@/components/ui/button-link";
 import { useInventory } from "@/components/providers/inventory-provider";
 import { getVehicleById } from "@/lib/inventory-store";
@@ -32,6 +34,20 @@ export default function EditVehiclePage() {
         backHref={`/vehicles/${vehicle.id}`}
       />
       <VehicleForm vehicle={vehicle} mode="edit" />
+      <Card className="border-destructive/30 bg-destructive/5">
+        <CardHeader>
+          <CardTitle className="text-sm font-medium text-destructive">
+            Danger zone
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="mb-4 text-sm text-muted-foreground">
+            Permanently remove this vehicle from inventory. Linked parts become
+            standalone stock.
+          </p>
+          <DeleteVehicleButton vehicle={vehicle} />
+        </CardContent>
+      </Card>
     </div>
   );
 }

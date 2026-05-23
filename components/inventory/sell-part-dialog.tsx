@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 import { useInventory } from "@/components/providers/inventory-provider";
 import { PAYMENT_METHODS } from "@/lib/constants";
 import type { Part } from "@/lib/types";
@@ -77,6 +78,7 @@ export function SellPartDialog({ part, trigger }: SellPartDialogProps) {
         paymentMethod: result.data.paymentMethod,
       },
     });
+    toast.success("Part sale recorded");
     setOpen(false);
   }
 

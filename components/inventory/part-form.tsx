@@ -13,7 +13,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
+import { toast } from "sonner";
 import { useInventory } from "@/components/providers/inventory-provider";
+import { findDuplicatePartSku } from "@/lib/inventory-checks";
 import {
   CONDITIONS,
   PART_CATEGORIES,
@@ -89,11 +91,19 @@ export function PartForm({ part, mode, defaultVehicleId }: PartFormProps) {
       return;
     }
 
+    const duplicate = findDuplicatePartSku(state, result.data.sku, part?.id);
+    if (duplicate) {
+      toast.error(duplicate);
+      return;
+    }
+
     if (mode === "create") {
       dispatch({ type: "ADD_PART", payload: result.data });
+      toast.success("Part added to inventory");
       router.push("/parts");
     } else if (part) {
       dispatch({ type: "UPDATE_PART", payload: { id: part.id, data: result.data } });
+      toast.success("Part updated");
       router.push("/parts");
     }
   }

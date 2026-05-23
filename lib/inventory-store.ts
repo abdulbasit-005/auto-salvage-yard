@@ -20,7 +20,9 @@ export type InventoryAction =
   | { type: "ADD_PART"; payload: PartInput }
   | { type: "UPDATE_PART"; payload: { id: string; data: PartInput } }
   | { type: "SELL_VEHICLE"; payload: SellVehicleInput }
-  | { type: "SELL_PART"; payload: SellPartInput };
+  | { type: "SELL_PART"; payload: SellPartInput }
+  | { type: "DELETE_VEHICLE"; payload: { id: string } }
+  | { type: "DELETE_PART"; payload: { id: string } };
 
 export function inventoryReducer(
   state: InventoryState,
@@ -133,6 +135,21 @@ export function inventoryReducer(
         sales: [sale, ...state.sales],
       };
     }
+    case "DELETE_VEHICLE": {
+      const vehicleId = action.payload.id;
+      return {
+        ...state,
+        vehicles: state.vehicles.filter((v) => v.id !== vehicleId),
+        parts: state.parts.map((p) =>
+          p.vehicleId === vehicleId ? { ...p, vehicleId: null } : p
+        ),
+      };
+    }
+    case "DELETE_PART":
+      return {
+        ...state,
+        parts: state.parts.filter((p) => p.id !== action.payload.id),
+      };
     default:
       return state;
   }
@@ -170,6 +187,13 @@ export function getPartById(
   id: string
 ): Part | undefined {
   return state.parts.find((p) => p.id === id);
+}
+
+export function getSaleById(
+  state: InventoryState,
+  id: string
+): Sale | undefined {
+  return state.sales.find((s) => s.id === id);
 }
 
 export function getPartsForVehicle(

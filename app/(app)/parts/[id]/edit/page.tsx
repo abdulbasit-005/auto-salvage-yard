@@ -2,7 +2,9 @@
 
 import { useParams } from "next/navigation";
 import { PageHeader } from "@/components/layout/page-header";
+import { DeletePartButton } from "@/components/inventory/delete-part-button";
 import { PartForm } from "@/components/inventory/part-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ButtonLink } from "@/components/ui/button-link";
 import { useInventory } from "@/components/providers/inventory-provider";
 import { getPartById } from "@/lib/inventory-store";
@@ -32,6 +34,19 @@ export default function EditPartPage() {
         backHref="/parts"
       />
       <PartForm part={part} mode="edit" />
+      <Card className="border-destructive/30 bg-destructive/5">
+        <CardHeader>
+          <CardTitle className="text-sm font-medium text-destructive">
+            Danger zone
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="mb-4 text-sm text-muted-foreground">
+            Permanently remove this part from inventory.
+          </p>
+          <DeletePartButton part={part} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
