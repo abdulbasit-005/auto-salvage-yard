@@ -49,7 +49,7 @@ export default function SalesPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6">
       <PageHeader
         title="Sales History"
         description={`${state.sales.length} transactions — click a row for details`}
@@ -94,7 +94,7 @@ export default function SalesPage() {
       </div>
       <Card className="border-border/50 bg-card/80 shadow-lg">
         <CardContent className="flex flex-col gap-4 pt-6 lg:flex-row lg:flex-wrap lg:items-center">
-          <div className="relative min-w-[200px] flex-1">
+          <div className="relative min-w-0 w-full flex-1">
             <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-primary/60" />
             <Input
               placeholder="Search buyer, item, phone..."
@@ -132,8 +132,8 @@ export default function SalesPage() {
           </Select>
         </CardContent>
       </Card>
-      <Card className="border-border/50 bg-card/80 shadow-lg">
-        <CardContent className="pt-6">
+      <Card className="min-w-0 border-border/50 bg-card/80 shadow-lg">
+        <CardContent className="min-w-0 overflow-x-auto pt-6">
           <SalesTable sales={sortedSales} />
         </CardContent>
       </Card>

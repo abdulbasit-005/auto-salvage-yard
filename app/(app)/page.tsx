@@ -6,7 +6,7 @@ import { RecentSales } from "@/components/inventory/recent-sales";
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 space-y-8">
       <DashboardHero />
       <StatsCards />
       <DashboardCharts />

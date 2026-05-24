@@ -24,14 +24,14 @@ export function PageHeader({
         className
       )}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex min-w-0 items-start gap-3">
         {backHref && (
-          <ButtonLink variant="ghost" size="icon-sm" href={backHref}>
+          <ButtonLink variant="ghost" size="icon-sm" href={backHref} className="shrink-0">
             <ArrowLeft className="size-4" />
           </ButtonLink>
         )}
-        <div>
-          <h1 className="font-heading text-3xl font-semibold uppercase tracking-wide">
+        <div className="min-w-0">
+          <h1 className="break-words font-heading text-2xl font-semibold uppercase tracking-wide sm:text-3xl">
             {title}
           </h1>
           {description && (

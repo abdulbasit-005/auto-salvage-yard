@@ -5,7 +5,7 @@ import { getHeroImageUrl } from "@/lib/images";
 
 export function DashboardHero() {
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-border/50 shadow-2xl">
+    <section className="relative max-w-full overflow-hidden rounded-2xl border border-border/50 shadow-2xl">
       <ImageWithFallback
         src={getHeroImageUrl()}
         alt="Salvage yard aerial view"
@@ -18,7 +18,7 @@ export function DashboardHero() {
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary">
           Yard Operations
         </p>
-        <h1 className="mt-2 font-heading text-3xl font-bold uppercase tracking-wide sm:text-4xl lg:text-5xl">
+        <h1 className="mt-2 break-words font-heading text-2xl font-bold uppercase tracking-wide sm:text-4xl lg:text-5xl">
           <span className="text-gradient-amber">Command</span> Center
         </h1>
         <p className="mt-3 max-w-lg text-sm text-muted-foreground sm:text-base">

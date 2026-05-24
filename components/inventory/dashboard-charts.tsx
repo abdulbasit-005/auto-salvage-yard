@@ -62,12 +62,12 @@ export function DashboardCharts() {
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-3">
-      <Card className="border-border/50 bg-card/80 shadow-lg lg:col-span-2">
+    <div className="grid min-w-0 gap-4 lg:grid-cols-3">
+      <Card className="min-w-0 border-border/50 bg-card/80 shadow-lg lg:col-span-2">
         <CardHeader className="border-b border-border/50 pb-4">
-          <CardTitle className="flex items-center justify-between gap-2 font-heading text-lg uppercase tracking-wide">
+          <CardTitle className="flex flex-col gap-1 font-heading text-lg uppercase tracking-wide sm:flex-row sm:items-center sm:justify-between sm:gap-2">
             <span className="flex items-center gap-2">
-              <BarChart3 className="size-5 text-primary" />
+              <BarChart3 className="size-5 shrink-0 text-primary" />
               Revenue by month
             </span>
             {hasRevenue ? (
@@ -77,7 +77,7 @@ export function DashboardCharts() {
             ) : null}
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-4">
+        <CardContent className="min-w-0 pt-4">
           {!hasRevenue ? (
             <p className="flex aspect-[2/1] items-center justify-center text-sm text-muted-foreground">
               Record a sale to see revenue trends.
@@ -127,7 +127,7 @@ export function DashboardCharts() {
         </CardContent>
       </Card>
 
-      <Card className="border-border/50 bg-card/80 shadow-lg">
+      <Card className="min-w-0 border-border/50 bg-card/80 shadow-lg">
         <CardHeader className="border-b border-border/50 pb-4">
           <CardTitle className="flex items-center gap-2 font-heading text-lg uppercase tracking-wide">
             <PieChartIcon className="size-5 text-primary" />
@@ -182,7 +182,7 @@ export function DashboardCharts() {
         </CardContent>
       </Card>
 
-      <Card className="border-border/50 bg-card/80 shadow-lg lg:col-span-3">
+      <Card className="min-w-0 border-border/50 bg-card/80 shadow-lg lg:col-span-3">
         <CardHeader className="border-b border-border/50 pb-4">
           <CardTitle className="flex items-center gap-2 font-heading text-lg uppercase tracking-wide">
             <Car className="size-5 text-primary" />

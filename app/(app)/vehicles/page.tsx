@@ -40,7 +40,7 @@ export default function VehiclesPage() {
   }, [state.vehicles, search, statusFilter]);
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6">
       <PageHeader
         title="Vehicles"
         description={`${state.vehicles.length} vehicles in inventory`}

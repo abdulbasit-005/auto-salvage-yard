@@ -28,7 +28,7 @@ export function RecentSales() {
 
   return (
     <>
-      <Card className="border-border/50 bg-card/80 shadow-lg">
+      <Card className="min-w-0 border-border/50 bg-card/80 shadow-lg">
         <CardHeader className="flex flex-row items-center justify-between border-b border-border/50 pb-4">
           <CardTitle className="flex items-center gap-2 font-heading text-lg uppercase tracking-wide">
             <Receipt className="size-5 text-primary" />
@@ -38,7 +38,7 @@ export function RecentSales() {
             View all
           </ButtonLink>
         </CardHeader>
-        <CardContent className="pt-4">
+        <CardContent className="min-w-0 overflow-x-auto pt-4">
           {recentSales.length === 0 ? (
             <p className="py-12 text-center text-sm text-muted-foreground">
               No sales recorded yet.

@@ -35,7 +35,7 @@ export default function RootLayout({
       lang="en"
       className={`dark ${dmSans.variable} ${oswald.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full">
+      <body className="min-h-full overflow-x-clip">
         <InventoryProvider>
           {children}
           <Toaster position="top-right" richColors closeButton />

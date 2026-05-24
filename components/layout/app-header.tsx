@@ -35,20 +35,20 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
   return (
     <>
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border/50 bg-background/80 px-4 backdrop-blur-md lg:px-6">
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden"
+            className="shrink-0 lg:hidden"
             onClick={onMenuClick}
           >
             <Menu className="size-5" />
           </Button>
-          <div className="hidden lg:block">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">
+          <div className="min-w-0">
+            <p className="hidden text-xs uppercase tracking-widest text-muted-foreground lg:block">
               Current section
             </p>
-            <p className="font-heading text-sm font-semibold tracking-wide">
+            <p className="truncate font-heading text-sm font-semibold tracking-wide sm:text-base">
               {title}
             </p>
           </div>

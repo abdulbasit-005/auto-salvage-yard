@@ -1,17 +1,13 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { Plus, Pencil } from "lucide-react";
 import { PartTable } from "@/components/inventory/part-table";
-import { SellVehicleDialog } from "@/components/inventory/sell-vehicle-dialog";
-import { VehicleStatusBadge } from "@/components/inventory/status-badge";
+import { VehicleDetailHero } from "@/components/inventory/vehicle-detail-hero";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 import { useInventory } from "@/components/providers/inventory-provider";
 import { getPartsForVehicle, getVehicleById } from "@/lib/inventory-store";
-import { getVehicleImageUrl } from "@/lib/images";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default function VehicleDetailPage() {
@@ -33,49 +29,8 @@ export default function VehicleDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-2xl border border-border/50 shadow-2xl">
-        <ImageWithFallback
-          src={getVehicleImageUrl(vehicle.make, vehicle.model)}
-          alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-          containerClassName="aspect-[21/9] min-h-[220px]"
-          priority
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/60 to-transparent" />
-        <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="font-mono text-sm text-primary">
-                {vehicle.stockNumber}
-              </p>
-              <h1 className="font-heading text-3xl font-bold uppercase tracking-wide sm:text-4xl">
-                {vehicle.year} {vehicle.make} {vehicle.model}
-              </h1>
-              <div className="mt-3">
-                <VehicleStatusBadge status={vehicle.status} variant="overlay" />
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {vehicle.status !== "sold" && (
-                <SellVehicleDialog vehicle={vehicle} />
-              )}
-              <ButtonLink
-                variant="outline"
-                href={`/vehicles/${vehicle.id}/edit`}
-                className="border-primary/30 bg-background/50 backdrop-blur-sm"
-              >
-                <Pencil className="size-4" />
-                Edit
-              </ButtonLink>
-              <ButtonLink href={`/parts/new?vehicleId=${vehicle.id}`}>
-                <Plus className="size-4" />
-                Add Part
-              </ButtonLink>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="min-w-0 space-y-6">
+      <VehicleDetailHero vehicle={vehicle} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border-border/50 bg-card/80 shadow-lg">
